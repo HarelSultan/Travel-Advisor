@@ -37,8 +37,8 @@ function renderLocations() {
          <td>${location.name}</td>
          <td>${location.createdAt}</td>
          <td>
-             <button onclick="onPanTo(${location.lat}, ${location.lng})" class="go-btn">Go</button>
-             <button onclick="onDeleteLocation('${location.id}')" class="btn-delete">Delete</button>
+             <button onclick="onPanTo(${location.lat}, ${location.lng})" class="go-btn action-btn">Go</button>
+             <button onclick="onDeleteLocation('${location.id}')" class="btn-delete action-btn">Delete</button>
          </td>
      </tr>    
     `)

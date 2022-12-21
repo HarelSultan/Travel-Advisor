@@ -11,12 +11,15 @@
 <body class="main-layout">
     <!-- Header -->
     <header class="full">
-        <h1>TravelTip</h1>
-        <form onsubmit="onSearch(event, this)" class="search-location">
-            <input class="search-input" type="search" name="seach-location" placeholder="Enter Location">
-            <button class="btn-search-location">GO</button>
-        </form>
-        <button onclick="onUserLocation()" class="btn-my-location">My Location</button>
+        <nav class="main-layout">
+
+            <h1>TravelTip</h1>
+            <form onsubmit="onSearch(event, this)" class="search-location">
+                <input class="search-input" type="search" name="seach-location" placeholder="Enter Location">
+                <button class="btn-search-location action-btn">GO</button>
+            </form>
+            <button onclick="onUserLocation()" class="btn-my-location action-btn">My Location</button>
+        </nav>
     </header>
     <!-- Location Section -->
     <section class="location-section">
