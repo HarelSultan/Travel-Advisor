@@ -24,8 +24,16 @@
     <!-- Location Section -->
     <section class="location-section">
         <h2>Location: <span class="current-location"></span></h2>
-        <button class="btn-copy-location action-btn">Copy Location</button>
+        <button onclick="onCopyUrl()" class="btn-copy-location action-btn">Copy Location</button>
+        <!-- Add Location -->
+        <div class="add-location-container">
+            <button onclick="onAddMarker()" class="btn-add-marker action-btn">Add Marker Speific Location</button>
+            <input class="location-name-input" type="text" placeholder="Choose location name">
+        </div>
+
     </section>
+
+
 
     <main class="main-content full">
         <div class="weather-container">
@@ -48,6 +56,9 @@
     </main>
 
     <p>You are at: <span class="user-pos"></span></p>
+    <p>Locations:
+    <pre class="locs"></pre>
+    </p>
 
     <script type="module" src="js/app.controller.js"></script>
 </body>
