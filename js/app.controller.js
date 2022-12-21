@@ -28,6 +28,7 @@ function addMapListeners() {
 
 function onMapClick(map, mapsMouseEvent) {
     mapService.setMapClickCords(mapsMouseEvent)
+    document.querySelector('.add-location-container').hidden = false
 }
 
 function renderLocations() {
@@ -59,6 +60,13 @@ function getPosition() {
 function onAddMarker() {
     const latLng = mapService.getCurrClickedCords()
     mapService.addMarker(latLng)
+    onPanTo(latLng.lat, latLng.lng)
+    const elAddLocationContainer = document.querySelector('.add-location-container')
+    const elLocationNameInput = elAddLocationContainer.querySelector('.location-name-input')
+    elAddLocationContainer.hidden = true
+    placeService.save(latLng, elLocationNameInput.value)
+        .then(() => renderLocations())
+    elLocationNameInput.value = ''
 }
 
 function onGetLocs() {
@@ -103,6 +111,7 @@ function onRenderWeather(lat, lng) {
                   To: ${data.maxTemp}℃, Wind: ${data.wind}ms</span>
                   `
             document.querySelector('.weather-container').innerHTML = strHTMLs
+            document.querySelector('.current-location').innerText = `${data.city}, ${data.country}`
         })
 }
 
