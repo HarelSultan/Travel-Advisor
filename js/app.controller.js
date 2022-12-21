@@ -28,7 +28,7 @@ function addMapListeners() {
 
 function onMapClick(map, mapsMouseEvent) {
     mapService.setMapClickCords(mapsMouseEvent)
-    document.querySelector('.add-location-container').hidden = false
+    document.querySelector('.add-location-container').style.display = 'flex'
 }
 
 function renderLocations() {
@@ -63,7 +63,7 @@ function onAddMarker() {
     onPanTo(latLng.lat, latLng.lng)
     const elAddLocationContainer = document.querySelector('.add-location-container')
     const elLocationNameInput = elAddLocationContainer.querySelector('.location-name-input')
-    elAddLocationContainer.hidden = true
+    elAddLocationContainer.style.display = 'none'
     placeService.save(latLng, elLocationNameInput.value)
         .then(() => renderLocations())
     elLocationNameInput.value = ''
