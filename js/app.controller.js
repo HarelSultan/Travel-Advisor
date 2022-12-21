@@ -6,7 +6,6 @@ window.onload = onInit
 window.onAddMarker = onAddMarker
 window.onPanTo = onPanTo
 window.onGetLocs = onGetLocs
-window.onGetUserPos = onGetUserPos
 window.onSearch = onSearch
 window.onUserLocation = onUserLocation
 window.onDeleteLocation = onDeleteLocation
@@ -14,12 +13,11 @@ window.onDeleteLocation = onDeleteLocation
 function onInit() {
     mapService.initMap()
         .then(() => {
-            console.log('Map is ready')
             addMapListeners()
+            panMapByQueryStringParams()
         })
         .catch(() => console.log('Error: cannot init map'))
     renderLocations()
-    panMapByQueryStringParams()
 }
 
 function addMapListeners() {
@@ -52,7 +50,6 @@ function renderLocations() {
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
 function getPosition() {
-    console.log('Getting Pos')
     return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject)
     })
@@ -66,15 +63,13 @@ function onAddMarker() {
 function onGetLocs() {
     locService.getLocs()
         .then(locs => {
-            console.log('Locations:', locs)
             document.querySelector('.locs').innerText = JSON.stringify(locs, null, 2)
         })
 }
 
-function onGetUserPos() {
+function onUserLocation() {
     getPosition()
         .then(pos => {
-            console.log('User position is:', pos.coords)
             document.querySelector('.user-pos').innerText =
                 `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`
             onPanTo(pos.coords.latitude, pos.coords.longitude)
@@ -84,11 +79,30 @@ function onGetUserPos() {
         })
 }
 function onPanTo(lat, lng) {
-    console.log('lat, lng:', lat, lng)
     mapService.panTo(lat, lng)
+    onRenderWeather(lat, lng)
     const queryStringParams = `?lat=${lat}&lng=${lng}`
     const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + queryStringParams
     window.history.pushState({ path: newUrl }, '', newUrl)
+}
+
+function onRenderWeather(lat, lng) {
+    placeService.getLocationWeather(lat, lng)
+        .then(data => {
+            const strHTMLs =
+                `
+                <h3 class="weather-header">Weather Today</h3>
+                 <span class="weather-icon">🌧️</span>
+                 <div class="weather-location-container"> 
+                 <span class="weather-location">${data.city}, ${data.country}</span>
+                 <span class="weather-desc">${data.desc}</span>
+                 </div>
+                 <span class="curr-temp">${data.temp}</span>
+                 <span class="min-max-temp">From: ${data.minTemp}
+                  To: ${data.maxTemp}℃, Wind: ${data.wind}ms</span>
+                  `
+            document.querySelector('.weather-container').innerHTML = strHTMLs
+        })
 }
 
 function onSearch(ev, elForm) {
@@ -97,27 +111,17 @@ function onSearch(ev, elForm) {
     mapService.searchLocation(elSearchInput.value)
         .then((res) => res.results)
         .then(data => {
-
-            console.log('data:', data)
             const latLng = {
                 lat: data[0].geometry.location.lat(),
                 lng: data[0].geometry.location.lng()
             }
-            console.log('latLng,:', latLng, elSearchInput.value)
+            onPanTo(latLng.lat, latLng.lng)
+            mapService.addMarker(latLng)
             placeService.save(latLng, elSearchInput.value)
                 .then(() => renderLocations())
         })
-
 }
 
-
-// mapService.searchLocation(elSearchInput.value)
-
-
-
-function onUserLocation() {
-
-}
 
 function onDeleteLocation(locationId) {
     placeService.remove(locationId)
@@ -125,5 +129,10 @@ function onDeleteLocation(locationId) {
 }
 
 function panMapByQueryStringParams() {
-
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop),
+    })
+    const lat = params.lat
+    const lng = params.lng
+    onPanTo(lat, lng)
 }

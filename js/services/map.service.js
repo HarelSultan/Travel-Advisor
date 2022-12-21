@@ -15,16 +15,13 @@ var gMap
 var gCurrClickedCords
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
-    console.log('InitMap')
     return _connectGoogleApi()
         .then(() => {
-            console.log('google available')
             gMap = new google.maps.Map(
                 document.querySelector('#map'), {
                 center: { lat, lng },
                 zoom: 15
             })
-            console.log('Map!', gMap)
         })
 }
 
@@ -78,20 +75,5 @@ function searchLocation(locationName) {
     let geocoder = new google.maps.Geocoder()
     return geocoder.geocode({ 'address': address }, function (results, status) {
         if (status !== 'OK') return
-        gMap.setCenter(results[0].geometry.location)
-        let marker = new google.maps.Marker({
-            map: gMap,
-            position: results[0].geometry.location
-        })
-        let cords = {
-            lat: marker.position.lat(),
-            lng: marker.position.lng()
-        }
-        // console.log('cords:', cords)
-        // console.log('adress:', address)
-        // const searchedLocation = placeService.save(cords, address)
-        // console.log('searchedLocation:', searchedLocation)
-        // return searchedLocation
-        // return placeService.save(cords, locationName)
     })
 }

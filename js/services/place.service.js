@@ -7,7 +7,8 @@ _createLocs()
 export const placeService = {
     query,
     remove,
-    save
+    save,
+    getLocationWeather
 }
 
 function query() {
@@ -21,6 +22,23 @@ function remove(locId) {
 
 function save(loc, address) {
     return storageService.post(LOC_KEY, _createLoc(loc, address))
+}
+
+function getLocationWeather(lat, lng) {
+    const API_KEY = '2bdf8c292393ad6b23f528ec35cf59ef'
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${API_KEY}`
+    return fetch(url).then((res) => res.json())
+        .then(data => {
+            return {
+                country: data.sys.country,
+                city: data.name,
+                temp: parseInt(data.main.temp - 273.15),
+                minTemp: parseInt(data.main.temp_min - 273.15),
+                maxTemp: parseInt(data.main.temp_max - 273.15),
+                desc: data.weather[0].description,
+                wind: data.wind.speed
+            }
+        })
 }
 
 function _createLocs() {
@@ -47,7 +65,3 @@ function _createLoc({ lat, lng }, name) {
     }
     return location
 }
-
-
-
-
