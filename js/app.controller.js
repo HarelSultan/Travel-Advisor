@@ -19,6 +19,7 @@ function onInit() {
         })
         .catch(() => console.log('Error: cannot init map'))
     renderLocations()
+    panMapByQueryStringParams()
 }
 
 function addMapListeners() {
@@ -44,7 +45,8 @@ function renderLocations() {
      </tr>    
     `)
             document.querySelector('.saved-locations-table').innerHTML = strHTMLs.join('')
-        })
+            return locations
+        }).then(locations => locations.map(location => mapService.addMarker({ lat: location.lat, lng: location.lng })))
 }
 
 
@@ -59,7 +61,6 @@ function getPosition() {
 function onAddMarker() {
     const latLng = mapService.getCurrClickedCords()
     mapService.addMarker(latLng)
-
 }
 
 function onGetLocs() {
@@ -76,6 +77,7 @@ function onGetUserPos() {
             console.log('User position is:', pos.coords)
             document.querySelector('.user-pos').innerText =
                 `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`
+            onPanTo(pos.coords.latitude, pos.coords.longitude)
         })
         .catch(err => {
             console.log('err!!!', err)
@@ -84,11 +86,34 @@ function onGetUserPos() {
 function onPanTo(lat, lng) {
     console.log('lat, lng:', lat, lng)
     mapService.panTo(lat, lng)
+    const queryStringParams = `?lat=${lat}&lng=${lng}`
+    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + queryStringParams
+    window.history.pushState({ path: newUrl }, '', newUrl)
 }
 
-function onSearch() {
+function onSearch(ev, elForm) {
+    ev.preventDefault()
+    const elSearchInput = elForm.querySelector('.search-input')
+    mapService.searchLocation(elSearchInput.value)
+        .then((res) => res.results)
+        .then(data => {
+
+            console.log('data:', data)
+            const latLng = {
+                lat: data[0].geometry.location.lat(),
+                lng: data[0].geometry.location.lng()
+            }
+            console.log('latLng,:', latLng, elSearchInput.value)
+            placeService.save(latLng, elSearchInput.value)
+                .then(() => renderLocations())
+        })
 
 }
+
+
+// mapService.searchLocation(elSearchInput.value)
+
+
 
 function onUserLocation() {
 
@@ -97,4 +122,8 @@ function onUserLocation() {
 function onDeleteLocation(locationId) {
     placeService.remove(locationId)
         .then(() => renderLocations())
+}
+
+function panMapByQueryStringParams() {
+
 }

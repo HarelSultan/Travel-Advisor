@@ -12,11 +12,11 @@
     <!-- Header -->
     <header class="full">
         <h1>TravelTip</h1>
-        <form onsubmit="onSearch(event)" class="search-location">
-            <input type="search" name="seach-location" placeholder="Enter Location">
+        <form onsubmit="onSearch(event, this)" class="search-location">
+            <input class="search-input" type="search" name="seach-location" placeholder="Enter Location">
             <button class="btn-search-location">GO</button>
         </form>
-        <button onclick="onMyLocation()" class="btn-my-location">My Location</button>
+        <button onclick="onGetUserPos()" class="btn-my-location">My Location</button>
     </header>
     <!-- Location Section -->
     <section class="location-section">
@@ -46,7 +46,6 @@
 
     <section class="map-tools">
         <button onclick="onAddMarker()" class="btn-add-marker action-btn">Add Marker Speific Location</button>
-        <button onclick="onGetUserPos()" class="btn-user-pos action-btn">Get User Position</button>
         <button onclick="onGetLocs()" class="btn-get-locs action-btn">Get Locations</button>
         <button onclick="onPanTo()" class="btn-pan action-btn">Pan Map to Tokyo</button>
     </section>

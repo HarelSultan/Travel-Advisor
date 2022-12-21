@@ -19,8 +19,8 @@ function remove(locId) {
     return storageService.remove(LOC_KEY, locId)
 }
 
-function save(loc) {
-    return storageService.post(LOC_KEY, _createLoc(loc))
+function save(loc, address) {
+    return storageService.post(LOC_KEY, _createLoc(loc, address))
 }
 
 function _createLocs() {
@@ -32,7 +32,7 @@ function _createLocs() {
 
 function _createDemoLocs() {
     const randomLocNames = ['Haifa', 'Natanya', 'Paris']
-    const randomLocCords = [{ lat: 32.3222, lng: 31.23545 }, { lat: 30.3222, lng: 33.23545 }, { lat: 31.3222, lng: 32.235445 }]
+    const randomLocCords = [{ lat: 32.794046, lng: 34.989571 }, { lat: 32.321458, lng: 34.853196 }, { lat: 48.856614, lng: 2.352222 }]
     const locations = randomLocNames.map((locName, i) => _createLoc(randomLocCords[i], locName))
     utilService.saveToStorage(LOC_KEY, locations)
 }

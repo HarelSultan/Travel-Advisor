@@ -1,3 +1,5 @@
+import { placeService } from './place.service.js'
+
 export const mapService = {
     initMap,
     addMarker,
@@ -5,6 +7,7 @@ export const mapService = {
     getMap,
     setMapClickCords,
     getCurrClickedCords,
+    searchLocation
 }
 
 // Var that is used throughout this Module (not global)
@@ -42,7 +45,7 @@ function panTo(lat, lng) {
 
 function _connectGoogleApi() {
     if (window.google) return Promise.resolve()
-    const API_KEY = 'AIzaSyB1nC-nHFU-I-ogkLp6XA9xBv_DgxaK6Ss' //DONE: Enter your API Key
+    const API_KEY = 'AIzaSyAcjXTTXy043pbUfqVSumxPaJ12ezYQYDw' //DONE: Enter your API Key
     var elGoogleApi = document.createElement('script')
     elGoogleApi.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}`
     elGoogleApi.async = true
@@ -70,3 +73,25 @@ function getCurrClickedCords() {
     return gCurrClickedCords
 }
 
+function searchLocation(locationName) {
+    var address = locationName
+    let geocoder = new google.maps.Geocoder()
+    return geocoder.geocode({ 'address': address }, function (results, status) {
+        if (status !== 'OK') return
+        gMap.setCenter(results[0].geometry.location)
+        let marker = new google.maps.Marker({
+            map: gMap,
+            position: results[0].geometry.location
+        })
+        let cords = {
+            lat: marker.position.lat(),
+            lng: marker.position.lng()
+        }
+        // console.log('cords:', cords)
+        // console.log('adress:', address)
+        // const searchedLocation = placeService.save(cords, address)
+        // console.log('searchedLocation:', searchedLocation)
+        // return searchedLocation
+        // return placeService.save(cords, locationName)
+    })
+}
