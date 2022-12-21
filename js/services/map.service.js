@@ -1,11 +1,15 @@
 export const mapService = {
     initMap,
     addMarker,
-    panTo
+    panTo,
+    getMap,
+    setMapClickCords,
+    getCurrClickedCords,
 }
 
 // Var that is used throughout this Module (not global)
 var gMap
+var gCurrClickedCords
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
     console.log('InitMap')
@@ -48,4 +52,17 @@ function _connectGoogleApi() {
         elGoogleApi.onload = resolve
         elGoogleApi.onerror = () => reject('Google script failed to load')
     })
+}
+
+function getMap() {
+    return gMap
+}
+
+function setMapClickCords(clickedCords) {
+    gCurrClickedCords = clickedCords
+}
+
+
+function getCurrClickedCords() {
+    return gCurrClickedCords
 }

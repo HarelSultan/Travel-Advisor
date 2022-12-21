@@ -13,8 +13,29 @@ function onInit() {
     mapService.initMap()
         .then(() => {
             console.log('Map is ready')
+            addMapListeners()
         })
         .catch(() => console.log('Error: cannot init map'))
+}
+
+function addMapListeners() {
+    const map = mapService.getMap()
+    map.addListener("click", (mapsMouseEvent) => onMapClick(map, mapsMouseEvent))
+}
+
+function onMapClick(map, mapsMouseEvent) {
+    let infoWindow = new google.maps.InfoWindow({
+        position: mapsMouseEvent.latLng,
+    })
+    infoWindow.setContent(
+        JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
+    )
+    infoWindow.open(map)
+    const clickedCords = {
+        lat: mapsMouseEvent.latLng.lat(),
+        lng: mapsMouseEvent.latLng.lng()
+    }
+    mapService.setMapClickCords(clickedCords)
 }
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
@@ -26,8 +47,8 @@ function getPosition() {
 }
 
 function onAddMarker() {
-    console.log('Adding a marker')
-    mapService.addMarker({ lat: 32.0749831, lng: 34.9120554 })
+    const latLng = mapService.getCurrClickedCords()
+    mapService.addMarker(latLng)
 }
 
 function onGetLocs() {
