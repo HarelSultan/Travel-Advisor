@@ -15,9 +15,9 @@ function onInit() {
         .then(() => {
             addMapListeners()
             panMapByQueryStringParams()
+            renderLocations()
         })
         .catch(() => console.log('Error: cannot init map'))
-    renderLocations()
 }
 
 function addMapListeners() {
@@ -122,7 +122,6 @@ function onSearch(ev, elForm) {
         })
 }
 
-
 function onDeleteLocation(locationId) {
     placeService.remove(locationId)
         .then(() => renderLocations())
@@ -132,7 +131,7 @@ function panMapByQueryStringParams() {
     const params = new Proxy(new URLSearchParams(window.location.search), {
         get: (searchParams, prop) => searchParams.get(prop),
     })
-    const lat = params.lat
-    const lng = params.lng
+    const lat = params.lat || 32.794046
+    const lng = params.lng || 34.989571
     onPanTo(lat, lng)
 }
