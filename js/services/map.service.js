@@ -13,6 +13,7 @@ export const mapService = {
 // Var that is used throughout this Module (not global)
 var gMap
 var gCurrClickedCords
+let gInfoWindow
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
     return _connectGoogleApi()
@@ -31,7 +32,7 @@ function addMarker(loc) {
         map: gMap,
         title: 'Hello World!'
     })
-    return marker
+    gInfoWindow.close(gMap)
 }
 
 function panTo(lat, lng) {
@@ -63,6 +64,12 @@ function setMapClickCords(mapsMouseEvent) {
         lat: mapsMouseEvent.latLng.lat(),
         lng: mapsMouseEvent.latLng.lng()
     }
+
+    gInfoWindow = new google.maps.InfoWindow({
+        content: `Position: ${clickedCords.lat}, ${clickedCords.lng}`,
+        position: { lat: clickedCords.lat, lng: clickedCords.lng }
+    })
+    gInfoWindow.open(gMap)
     gCurrClickedCords = clickedCords
 }
 
