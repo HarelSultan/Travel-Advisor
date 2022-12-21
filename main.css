@@ -1,0 +1,54 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: gainsboro;
+}
+
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: lightblue;
+}
+
+.location-section {
+    display: flex;
+    justify-content: space-between;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: 0.6fr 1fr;
+    grid-template-rows: 1.2fr 1fr;
+    gap: 10px;
+    width: 650px;
+    margin: 30px auto;
+}
+
+.weather-container {
+    background: lightgreen;
+}
+
+.locations-table {
+    background: lightslategray;
+}
+
+.map-container {
+    grid-area: 1/2/3/3;
+}
+
+.main-layout>*:not(.full) {
+    margin-right: 30px;
+    margin-left: 30px;
+}
+
+.action-btn {
+    padding: 10px;
+    border: none;
+    border-radius: 1em;
+}

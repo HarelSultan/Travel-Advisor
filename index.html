@@ -4,12 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
     <title>TravelTip</title>
 </head>
 
-<body>
+<body class="main-layout">
     <!-- Header -->
-    <header>
+    <header class="full">
         <h1>TravelTip</h1>
         <form onsubmit="onSearch(event)" class="search-location">
             <input type="search" name="seach-location" placeholder="Enter Location">
@@ -20,10 +21,10 @@
     <!-- Location Section -->
     <section class="location-section">
         <h2>Location: <span class="current-location"></span></h2>
-        <button class="btn-copy-location">Copy Location</button>
+        <button class="btn-copy-location action-btn">Copy Location</button>
     </section>
 
-    <main class="main-content">
+    <main class="main-content full">
         <div class="weather-container">
             <h3>Weather Today</h3>
         </div>
@@ -64,14 +65,14 @@
 
         </div>
 
-        <div id="map" style="width: 100%; height: 400px;"></div>
+        <div class="map-container" id="map" style="width: 100%; height: 400px;"></div>
     </main>
 
     <section class="map-tools">
-        <button onclick="onAddMarker()" class="btn-add-marker">Add Marker Speific Location</button>
-        <button onclick="onGetUserPos()" class="btn-user-pos">Get User Position</button>
-        <button onclick="onGetLocs()" class="btn-get-locs">Get Locations</button>
-        <button onclick="onPanTo()" class="btn-pan">Pan Map to Tokyo</button>
+        <button onclick="onAddMarker()" class="btn-add-marker action-btn">Add Marker Speific Location</button>
+        <button onclick="onGetUserPos()" class="btn-user-pos action-btn">Get User Position</button>
+        <button onclick="onGetLocs()" class="btn-get-locs action-btn">Get Locations</button>
+        <button onclick="onPanTo()" class="btn-pan action-btn">Pan Map to Tokyo</button>
     </section>
 
     <p>You are at: <span class="user-pos"></span></p>
