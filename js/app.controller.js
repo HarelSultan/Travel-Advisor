@@ -9,6 +9,7 @@ window.onGetLocs = onGetLocs
 window.onSearch = onSearch
 window.onUserLocation = onUserLocation
 window.onDeleteLocation = onDeleteLocation
+window.onCopyUrl = onCopyUrl
 
 function onInit() {
     mapService.initMap()
@@ -22,7 +23,7 @@ function onInit() {
 
 function addMapListeners() {
     const map = mapService.getMap()
-    map.addListener("click", (mapsMouseEvent) => onMapClick(map, mapsMouseEvent))
+    map.addListener("dblclick", (mapsMouseEvent) => onMapClick(map, mapsMouseEvent))
 }
 
 function onMapClick(map, mapsMouseEvent) {
@@ -134,4 +135,10 @@ function panMapByQueryStringParams() {
     const lat = params.lat || 32.794046
     const lng = params.lng || 34.989571
     onPanTo(lat, lng)
+}
+
+function onCopyUrl() {
+    const url = window.location.href
+    navigator.clipboard.writeText(url)
+    document.querySelector('.')
 }
