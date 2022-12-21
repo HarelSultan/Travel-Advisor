@@ -1,5 +1,6 @@
 import { locService } from './services/loc.service.js'
 import { mapService } from './services/map.service.js'
+import { placeService } from './services/place.service.js'
 
 window.onload = onInit
 window.onAddMarker = onAddMarker
@@ -8,6 +9,7 @@ window.onGetLocs = onGetLocs
 window.onGetUserPos = onGetUserPos
 window.onSearch = onSearch
 window.onUserLocation = onUserLocation
+window.onDeleteLocation = onDeleteLocation
 
 function onInit() {
     mapService.initMap()
@@ -16,6 +18,7 @@ function onInit() {
             addMapListeners()
         })
         .catch(() => console.log('Error: cannot init map'))
+    renderLocations()
 }
 
 function addMapListeners() {
@@ -24,19 +27,26 @@ function addMapListeners() {
 }
 
 function onMapClick(map, mapsMouseEvent) {
-    let infoWindow = new google.maps.InfoWindow({
-        position: mapsMouseEvent.latLng,
-    })
-    infoWindow.setContent(
-        JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
-    )
-    infoWindow.open(map)
-    const clickedCords = {
-        lat: mapsMouseEvent.latLng.lat(),
-        lng: mapsMouseEvent.latLng.lng()
-    }
-    mapService.setMapClickCords(clickedCords)
+    mapService.setMapClickCords(mapsMouseEvent)
 }
+
+function renderLocations() {
+    placeService.query()
+        .then(locations => {
+            const strHTMLs = locations.map(location => `
+    <tr>
+         <td>${location.name}</td>
+         <td>${location.createdAt}</td>
+         <td>
+             <button onclick="onPanTo(${location.lat}, ${location.lng})" class="go-btn">Go</button>
+             <button onclick="onDeleteLocation('${location.id}')" class="btn-delete">Delete</button>
+         </td>
+     </tr>    
+    `)
+            document.querySelector('.saved-locations-table').innerHTML = strHTMLs.join('')
+        })
+}
+
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
 function getPosition() {
@@ -49,6 +59,7 @@ function getPosition() {
 function onAddMarker() {
     const latLng = mapService.getCurrClickedCords()
     mapService.addMarker(latLng)
+
 }
 
 function onGetLocs() {
@@ -70,9 +81,9 @@ function onGetUserPos() {
             console.log('err!!!', err)
         })
 }
-function onPanTo() {
-    console.log('Panning the Map')
-    mapService.panTo(35.6895, 139.6917)
+function onPanTo(lat, lng) {
+    console.log('lat, lng:', lat, lng)
+    mapService.panTo(lat, lng)
 }
 
 function onSearch() {
@@ -81,4 +92,9 @@ function onSearch() {
 
 function onUserLocation() {
 
+}
+
+function onDeleteLocation(locationId) {
+    placeService.remove(locationId)
+        .then(() => renderLocations())
 }

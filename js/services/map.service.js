@@ -58,11 +58,15 @@ function getMap() {
     return gMap
 }
 
-function setMapClickCords(clickedCords) {
+function setMapClickCords(mapsMouseEvent) {
+    const clickedCords = {
+        lat: mapsMouseEvent.latLng.lat(),
+        lng: mapsMouseEvent.latLng.lng()
+    }
     gCurrClickedCords = clickedCords
 }
-
 
 function getCurrClickedCords() {
     return gCurrClickedCords
 }
+
